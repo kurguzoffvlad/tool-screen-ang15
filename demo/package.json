@@ -1,5 +1,0 @@
-{
-    "ngPackage": {
-        "lib": { "entryFile": "../src/public-api.demo.ts" }
-    }
-}
