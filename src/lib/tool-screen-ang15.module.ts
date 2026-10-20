@@ -1,16 +1,13 @@
-import { NgModule } from '@angular/core';
-import { ToolScreenAng15Component } from './tool-screen-ang15.component';
+import { ModuleWithProviders, NgModule } from '@angular/core';
+import { IToolScreenConfig, provideToolScreenConfig } from './tokens/tool-screen.config';
 
 
-
-@NgModule({
-  declarations: [
-    ToolScreenAng15Component
-  ],
-  imports: [
-  ],
-  exports: [
-    ToolScreenAng15Component
-  ]
-})
-export class ToolScreenAng15Module { }
+@NgModule()
+export class ToolScreenAng15Module {
+    public static forRoot(config: Partial<IToolScreenConfig> = {}): ModuleWithProviders<ToolScreenAng15Module> {
+        return {
+            ngModule: ToolScreenAng15Module,
+            providers: [provideToolScreenConfig(config)],
+        };
+    }
+}
