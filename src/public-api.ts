@@ -8,4 +8,6 @@ export * from './lib/models/screen.interfaces';
 export * from './lib/tokens/tool-screen.config';
 export * from './lib/services/tool-screen.service';
 export * from './lib/tool-screen-ang15.module';
+export * from './lib/utils/browser.util';
+export * from './lib/utils/os.util';
 // компонент — только в демо-апп, не в public-api
