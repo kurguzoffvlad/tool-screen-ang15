@@ -47,12 +47,10 @@ npm install @angular/common@^15.2.0 @angular/core@^15.2.0
 Импортируйте модуль в `AppModule`:
 
 ```ts
-import { ToolScreenAng15Module } from 'tool-screen-ang15';
+import {provideToolScreenConfig} from 'tool-screen-ang15';
 
 @NgModule({
-  imports: [
-    ToolScreenAng15Module.forRoot(), // или forRoot({ devices: {...}, resizeDebounceMs: 100 })
-  ],
+    providers: [ provideToolScreenConfig()],
 })
 export class AppModule {}
 ```
@@ -75,7 +73,6 @@ tool-screen-ang15/
 ├── utils/
 │   ├── browser.util.ts         # detectBrowser
 │   └── os.util.ts              # detectOperatingSystem
-├── tool-screen-ang15.module.ts # NgModule + forRoot()
 └── public-api.ts               # точка входа библиотеки
 ```
 
