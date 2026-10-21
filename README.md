@@ -19,8 +19,8 @@
 - [Структура](#структура)
 - [Конфигурация](#конфигурация)
 - [Сервисы](#сервисы)
-    - [ScreenDetectorService](#screendetectorservice)
-    - [ToolScreenService](#toolscreenservice)
+	- [ScreenDetectorService](#screendetectorservice)
+	- [ToolScreenService](#toolscreenservice)
 - [Интерфейсы и типы](#интерфейсы-и-типы)
 - [Перечисления](#перечисления)
 - [Утилиты](#утилиты)
@@ -50,9 +50,10 @@ npm install @angular/common@^15.2.0 @angular/core@^15.2.0
 import {provideToolScreenConfig} from 'tool-screen-ang15';
 
 @NgModule({
-    providers: [ provideToolScreenConfig()],
+	providers: [provideToolScreenConfig()],
 })
-export class AppModule {}
+export class AppModule {
+}
 ```
 
 ---
@@ -84,8 +85,8 @@ tool-screen-ang15/
 
 ```ts
 interface IToolScreenConfig {
-  devices: IDevices;        // границы устройств
-  resizeDebounceMs: number; // задержка auditTime при ресайзе (мс)
+	devices: IDevices;        // границы устройств
+	resizeDebounceMs: number; // задержка auditTime при ресайзе (мс)
 }
 ```
 
@@ -93,20 +94,20 @@ interface IToolScreenConfig {
 
 ```ts
 interface IDevices {
-  phoneMaxSize: number;   // макс. размер для смартфонов (по умолчанию 932)
-  tabletMaxSize: number;  // макс. размер для планшетов (по умолчанию 1366)
-  desktopMaxSize: number; // макс. ширина для ноутбука (по умолчанию 1500)
+	phoneMaxSize: number;   // макс. размер для смартфонов (по умолчанию 932)
+	tabletMaxSize: number;  // макс. размер для планшетов (по умолчанию 1366)
+	desktopMaxSize: number; // макс. ширина для ноутбука (по умолчанию 1500)
 }
 ```
 
 **Значения по умолчанию** (`DEFAULT_TOOL_SCREEN_CONFIG`):
 
-| Параметр | Значение |
-|---|---|
-| `phoneMaxSize` | `932` |
-| `tabletMaxSize` | `1366` |
-| `desktopMaxSize` | `1500` |
-| `resizeDebounceMs` | `50` |
+| Параметр           | Значение |
+|--------------------|----------|
+| `phoneMaxSize`     | `932`    |
+| `tabletMaxSize`    | `1366`   |
+| `desktopMaxSize`   | `1500`   |
+| `resizeDebounceMs` | `50`     |
 
 > **Важно:** `forRoot()` выполняет глубокое слияние для `devices`. Если передать только `phoneMaxSize`, остальные границы останутся дефолтными.
 
@@ -118,12 +119,12 @@ interface IDevices {
 
 Отвечает за сбор информации об экране и устройстве из `window.*` и `navigator.userAgent`.
 
-| Метод | Что делает |
-|---|---|
-| `getScreen(devices)` | Возвращает заполненный `IScreenInfo`: пропорции, тип устройства, ориентация, ОС, браузер, pixelRatio, maxSize. |
-| `getEmptyScreen(devices)` | Возвращает «пустой» `IScreenInfo` (все поля `null` / `Unknown`) для SSR. |
-| `getType(maxSize, devices)` | Приватный. Определяет тип экрана по `max(innerWidth, innerHeight)`. |
-| `getOrientation()` | Приватный. Определяет ориентацию через `matchMedia('(orientation: landscape)')`. |
+| Метод                       | Что делает                                                                                                     |
+|-----------------------------|----------------------------------------------------------------------------------------------------------------|
+| `getScreen(devices)`        | Возвращает заполненный `IScreenInfo`: пропорции, тип устройства, ориентация, ОС, браузер, pixelRatio, maxSize. |
+| `getEmptyScreen(devices)`   | Возвращает «пустой» `IScreenInfo` (все поля `null` / `Unknown`) для SSR.                                       |
+| `getType(maxSize, devices)` | Приватный. Определяет тип экрана по `max(innerWidth, innerHeight)`.                                            |
+| `getOrientation()`          | Приватный. Определяет ориентацию через `matchMedia('(orientation: landscape)')`.                               |
 
 ---
 
@@ -131,15 +132,16 @@ interface IDevices {
 
 Root-scoped сервис (`providedIn: 'root'`). Один экземпляр на всё приложение.
 
-| Член | Тип | Описание |
-|---|---|---|
-| `state$` | `Observable<IScreenInfo>` | Публичный поток состояния экрана (read-only) |
-| `state` | `IScreenInfo` | Синхронный снимок текущего состояния |
-| `setDevices(devices: Partial<IDevices>)` | `void` | Переопределяет границы устройств и сразу пересчитывает состояние |
-| `refresh()` | `void` | Принудительно пересчитывает состояние (no-op в SSR и после `destroy()`) |
-| `destroy()` | `void` | Завершает поток и отписывается от слушателей `window` (для тестов/SSR) |
+| Член                                     | Тип                       | Описание                                                                |
+|------------------------------------------|---------------------------|-------------------------------------------------------------------------|
+| `state$`                                 | `Observable<IScreenInfo>` | Публичный поток состояния экрана (read-only)                            |
+| `state`                                  | `IScreenInfo`             | Синхронный снимок текущего состояния                                    |
+| `setDevices(devices: Partial<IDevices>)` | `void`                    | Переопределяет границы устройств и сразу пересчитывает состояние        |
+| `refresh()`                              | `void`                    | Принудительно пересчитывает состояние (no-op в SSR и после `destroy()`) |
+| `destroy()`                              | `void`                    | Завершает поток и отписывается от слушателей `window` (для тестов/SSR)  |
 
 Сервис автоматически подписывается на:
+
 - `window.resize`;
 - изменение `orientation` (landscape/portrait);
 - изменение `devicePixelRatio` (`resolution: Xdppx`).
@@ -156,27 +158,27 @@ type TScreen = ScreenEnums.Desktop | ScreenEnums.Tablet | ScreenEnums.Phone;
 type TOrientation = OrientationScreenEnum.Horizontal | OrientationScreenEnum.Vertical;
 
 interface IScreenProportions {
-  width: TNullable<number>;       // window.screen.width
-  height: TNullable<number>;      // window.screen.height
-  innerWidth: TNullable<number>;  // window.innerWidth
-  innerHeight: TNullable<number>; // window.innerHeight
+	width: TNullable<number>;       // window.screen.width
+	height: TNullable<number>;      // window.screen.height
+	innerWidth: TNullable<number>;  // window.innerWidth
+	innerHeight: TNullable<number>; // window.innerHeight
 }
 
 interface IScreenOptions {
-  operatingSystem: OperatingSystemEnum;
-  browser: BrowserEnum;
-  pixelRatio: TNullable<number>;
-  proportions: IScreenProportions;
-  maxSize: TNullable<number>; // max(innerWidth, innerHeight)
+	operatingSystem: OperatingSystemEnum;
+	browser: BrowserEnum;
+	pixelRatio: TNullable<number>;
+	proportions: IScreenProportions;
+	maxSize: TNullable<number>; // max(innerWidth, innerHeight)
 }
 
 interface IScreenInfo {
-  devices: IDevices;
-  screen: {
-    type: TNullable<TScreen>;
-    orientation: TNullable<TOrientation>;
-    options: IScreenOptions;
-  };
+	devices: IDevices;
+	screen: {
+		type: TNullable<TScreen>;
+		orientation: TNullable<TOrientation>;
+		options: IScreenOptions;
+	};
 }
 ```
 
@@ -186,18 +188,18 @@ interface IScreenInfo {
 
 **`ScreenEnums`**
 
-| Значение | Описание |
-|---|---|
-| `Desktop = 'desktop'` | Десктоп |
-| `Tablet = 'tablet'` | Планшет |
-| `Phone = 'phone'` | Смартфон |
+| Значение              | Описание |
+|-----------------------|----------|
+| `Desktop = 'desktop'` | Десктоп  |
+| `Tablet = 'tablet'`   | Планшет  |
+| `Phone = 'phone'`     | Смартфон |
 
 **`OrientationScreenEnum`**
 
-| Значение | Описание |
-|---|---|
+| Значение                    | Описание    |
+|-----------------------------|-------------|
 | `Horizontal = 'horizontal'` | Ландшафтная |
-| `Vertical = 'vertical'` | Портретная |
+| `Vertical = 'vertical'`     | Портретная  |
 
 **`OperatingSystemEnum`**
 
@@ -212,7 +214,7 @@ interface IScreenInfo {
 ## Утилиты
 
 ```ts
-import { detectBrowser, detectOperatingSystem } from 'tool-screen-ang15';
+import {detectBrowser, detectOperatingSystem} from 'tool-screen-ang15';
 
 detectBrowser();                       // по navigator.userAgent
 detectBrowser('custom user-agent');    // по переданной строке
@@ -229,9 +231,10 @@ detectOperatingSystem('custom ua');
 **Адаптивная вёрстка по типу устройства:**
 
 ```ts
+
 @Component({
-  selector: 'app-layout',
-  template: `
+	selector: 'app-layout',
+	template: `
         <div class="screen-box"
          [class]="'screen-box type-' + (state.screen.type ?? 'unknown')
                  + ' orientation-' + (state.screen.orientation ?? 'unknown')">
@@ -246,7 +249,7 @@ detectOperatingSystem('custom ua');
   `,
 })
 export class LayoutComponent {
-    public readonly screen = inject(ToolScreenService);
+	public readonly screen = inject(ToolScreenService);
 }
 ```
 
@@ -254,32 +257,32 @@ export class LayoutComponent {
 
 ```ts
 this.toolScreen.state$.subscribe((info) => {
-  if (info.screen.type === ScreenEnums.Phone) {
-    // мобильная логика
-  }
+	if (info.screen.type === ScreenEnums.Phone) {
+		// мобильная логика
+	}
 });
 ```
 
 **Ручное обновление после изменения конфигурации:**
 
 ```ts
-this.toolScreen.setDevices({ phoneMaxSize: 900 });
+this.toolScreen.setDevices({phoneMaxSize: 900});
 // состояние пересчитано синхронно
 ```
 
 **Использование standalone-компонентов (без модуля):**
 
 ```ts
-import { ApplicationConfig } from '@angular/core';
-import { provideToolScreenConfig } from 'tool-screen-ang15';
+import {ApplicationConfig} from '@angular/core';
+import {provideToolScreenConfig} from 'tool-screen-ang15';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideToolScreenConfig({
-      devices: { phoneMaxSize: 900 },
-      resizeDebounceMs: 100,
-    }),
-  ],
+	providers: [
+		provideToolScreenConfig({
+			devices: {phoneMaxSize: 900},
+			resizeDebounceMs: 100,
+		}),
+	],
 };
 ```
 
@@ -304,7 +307,7 @@ export const appConfig: ApplicationConfig = {
 
 ```ts
 this.toolScreen.state$.subscribe((info) => {
-  console.log('[Screen]', info.screen.type, info.screen.orientation);
+	console.log('[Screen]', info.screen.type, info.screen.orientation);
 });
 ```
 
@@ -316,4 +319,5 @@ this.toolScreen.state$.subscribe((info) => {
 - `forRoot()` выполняет глубокое слияние `devices` — можно передать только часть полей.
 - `resizeDebounceMs` управляет `auditTime` — чем больше значение, тем реже пересчёт.
 - Все публичные типы и сервисы экспортируются через `public-api.ts`.
+
 ```

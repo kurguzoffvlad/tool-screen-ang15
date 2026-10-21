@@ -1,27 +1,27 @@
 // Импортируем InjectionToken и Provider из ядра Angular.
 // InjectionToken нужен для создания уникального ключа внедрения зависимостей,
 // а Provider — для описания того, как этот токен должен быть предоставлен в DI-контейнере.
-import { InjectionToken, Provider } from '@angular/core';
+import {InjectionToken, Provider} from '@angular/core';
 
 // Импортируем интерфейс границ устройств и дефолтные значения.
-import { DEFAULT_DEVICES, IDevices } from '../models/devices';
+import {DEFAULT_DEVICES, IDevices} from '../models/devices';
 
 /**
  * Интерфейс конфигурации библиотеки ToolScreen.
  * Определяет структуру настроек, которые можно передать при подключении модуля.
  */
 export interface IToolScreenConfig {
-    /**
-     * Границы устройств для классификации экрана.
-     * Определяют, при какой ширине/высоте экран считается телефоном, планшетом или десктопом.
-     */
-    devices: IDevices;
+	/**
+	 * Границы устройств для классификации экрана.
+	 * Определяют, при какой ширине/высоте экран считается телефоном, планшетом или десктопом.
+	 */
+	devices: IDevices;
 
-    /**
-     * Задержка (в миллисекундах) для подавления частых вызовов при ресайзе (debounce/audit).
-     * Помогает избежать лишних пересчетов состояния при изменении размеров окна.
-     */
-    resizeDebounceMs: number;
+	/**
+	 * Задержка (в миллисекундах) для подавления частых вызовов при ресайзе (debounce/audit).
+	 * Помогает избежать лишних пересчетов состояния при изменении размеров окна.
+	 */
+	resizeDebounceMs: number;
 }
 
 /**
@@ -29,10 +29,10 @@ export interface IToolScreenConfig {
  * Используется, если потребитель библиотеки не передал свои значения.
  */
 export const DEFAULT_TOOL_SCREEN_CONFIG: IToolScreenConfig = {
-    // Берем дефолтные границы устройств (телефон, планшет, десктоп)
-    devices: DEFAULT_DEVICES,
-    // Задержка 50 мс — оптимальный баланс между отзывчивостью и производительностью
-    resizeDebounceMs: 50,
+	// Берем дефолтные границы устройств (телефон, планшет, десктоп)
+	devices: DEFAULT_DEVICES,
+	// Задержка 50 мс — оптимальный баланс между отзывчивостью и производительностью
+	resizeDebounceMs: 50,
 };
 
 /**
@@ -50,27 +50,27 @@ export const TOOL_SCREEN_CONFIG = new InjectionToken<IToolScreenConfig>('TOOL_SC
  * @returns Provider для регистрации конфигурации в DI-контейнере Angular.
  */
 export function provideToolScreenConfig(config: Partial<IToolScreenConfig> = {}): Provider {
-    return {
-        // Указываем, что регистрируем значение именно для токена TOOL_SCREEN_CONFIG
-        provide: TOOL_SCREEN_CONFIG,
+	return {
+		// Указываем, что регистрируем значение именно для токена TOOL_SCREEN_CONFIG
+		provide: TOOL_SCREEN_CONFIG,
 
-        // useValue позволяет передать готовый объект (а не класс или фабрику)
-        useValue: {
-            // 1. Разворачиваем базовую конфигурацию (устанавливаем resizeDebounceMs и devices)
-            ...DEFAULT_TOOL_SCREEN_CONFIG,
+		// useValue позволяет передать готовый объект (а не класс или фабрику)
+		useValue: {
+			// 1. Разворачиваем базовую конфигурацию (устанавливаем resizeDebounceMs и devices)
+			...DEFAULT_TOOL_SCREEN_CONFIG,
 
-            // 2. Перезаписываем её тем, что передал пользователь (если передал).
-            // Если пользователь передал свой resizeDebounceMs — он заменит дефолтный.
-            ...config,
+			// 2. Перезаписываем её тем, что передал пользователь (если передал).
+			// Если пользователь передал свой resizeDebounceMs — он заменит дефолтный.
+			...config,
 
-            // 3. Явно обрабатываем вложенный объект devices.
-            // Это нужно для глубокого слияния (Deep Merge): если пользователь передал
-            // только phoneMaxSize, остальные параметры (tabletMaxSize, desktopMaxSize)
-            // должны остаться дефолтными.
-            devices: {
-                ...DEFAULT_DEVICES,
-                ...(config.devices ?? {}) // Если config.devices не передан (undefined), берем пустой объект
-            },
-        },
-    };
+			// 3. Явно обрабатываем вложенный объект devices.
+			// Это нужно для глубокого слияния (Deep Merge): если пользователь передал
+			// только phoneMaxSize, остальные параметры (tabletMaxSize, desktopMaxSize)
+			// должны остаться дефолтными.
+			devices: {
+				...DEFAULT_DEVICES,
+				...(config.devices ?? {}) // Если config.devices не передан (undefined), берем пустой объект
+			},
+		},
+	};
 }

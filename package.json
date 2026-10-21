@@ -1,13 +1,13 @@
 {
-  "name": "tool-screen-ang15",
-  "version": "0.0.7",
-  "description": "Библиотека экрана",
-  "peerDependencies": {
-    "@angular/common": "^15.2.0",
-    "@angular/core": "^15.2.0"
-  },
-  "dependencies": {
-    "tslib": "^2.3.0"
-  },
-  "sideEffects": false
+	"name": "tool-screen-ang15",
+	"version": "0.0.9",
+	"description": "Библиотека экрана",
+	"peerDependencies": {
+		"@angular/common": "^15.2.0",
+		"@angular/core": "^15.2.0"
+	},
+	"dependencies": {
+		"tslib": "^2.3.0"
+	},
+	"sideEffects": false
 }
