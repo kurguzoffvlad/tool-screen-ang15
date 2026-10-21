@@ -1,4 +1,4 @@
-import {OperatingSystemEnum} from '../models/screen.enums';
+import { OperatingSystemEnum } from '../models/screen.enums';
 
 export function detectOperatingSystem(userAgent: string = navigator.userAgent): OperatingSystemEnum {
 	const ua = userAgent.toLowerCase();

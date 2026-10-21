@@ -1,10 +1,10 @@
 // Импортируем InjectionToken и Provider из ядра Angular.
 // InjectionToken нужен для создания уникального ключа внедрения зависимостей,
 // а Provider — для описания того, как этот токен должен быть предоставлен в DI-контейнере.
-import {InjectionToken, Provider} from '@angular/core';
+import { InjectionToken, Provider } from '@angular/core';
 
 // Импортируем интерфейс границ устройств и дефолтные значения.
-import {DEFAULT_DEVICES, IDevices} from '../models/devices';
+import { DEFAULT_DEVICES, IDevices } from '../models/devices';
 
 /**
  * Интерфейс конфигурации библиотеки ToolScreen.

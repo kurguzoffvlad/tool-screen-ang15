@@ -1,5 +1,5 @@
-import {IDevices} from './devices';
-import {BrowserEnum, OperatingSystemEnum, OrientationScreenEnum, ScreenEnums,} from './screen.enums';
+import { IDevices } from './devices';
+import { BrowserEnum, OperatingSystemEnum, OrientationScreenEnum, ScreenEnums, } from './screen.enums';
 
 export type TNullable<T> = T | null;
 export type TScreen = ScreenEnums.Desktop | ScreenEnums.Tablet | ScreenEnums.Phone;

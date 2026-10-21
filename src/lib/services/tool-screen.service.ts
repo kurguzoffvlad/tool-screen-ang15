@@ -1,11 +1,11 @@
-import {inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {isPlatformBrowser} from '@angular/common';
-import {auditTime, BehaviorSubject, fromEvent, merge, Observable, Subject, takeUntil,} from 'rxjs';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { auditTime, BehaviorSubject, fromEvent, merge, Observable, Subject, takeUntil, } from 'rxjs';
 
-import {IDevices} from '../models/devices';
-import {IScreenInfo} from '../models/screen.interfaces';
-import {IToolScreenConfig, TOOL_SCREEN_CONFIG} from '../tokens/tool-screen.config';
-import {ScreenDetectorService} from './screen-detector.service';
+import { IDevices } from '../models/devices';
+import { IScreenInfo } from '../models/screen.interfaces';
+import { IToolScreenConfig, TOOL_SCREEN_CONFIG } from '../tokens/tool-screen.config';
+import { ScreenDetectorService } from './screen-detector.service';
 
 /**
  * Сервис состояния экрана.
@@ -19,7 +19,7 @@ import {ScreenDetectorService} from './screen-detector.service';
  * Сервис root-scoped: один экземпляр на всё приложение, `destroy()`
  * вызывать не нужно (метод оставлен для тестов/SSR).
  */
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ToolScreenService {
 	/** Конфиг: границы устройств и задержка debounce для resize. */
 	private readonly _config = inject<IToolScreenConfig>(TOOL_SCREEN_CONFIG);
@@ -37,7 +37,7 @@ export class ToolScreenService {
 	private readonly _state$$: BehaviorSubject<IScreenInfo>;
 
 	/** Текущие границы устройств (можно менять через `setDevices`). */
-	private _devices: IDevices = {...this._config.devices};
+	private _devices: IDevices = { ...this._config.devices };
 
 	/** Публичный поток состояния экрана (read-only). */
 	public readonly state$: Observable<IScreenInfo>;
@@ -66,7 +66,7 @@ export class ToolScreenService {
 	 * @param devices частичный набор границ (`phoneMaxSize`, `tabletMaxSize`, `desktopMaxSize`)
 	 */
 	public setDevices(devices: Partial<IDevices>): void {
-		this._devices = {...this._devices, ...devices};
+		this._devices = { ...this._devices, ...devices };
 		this.refresh();
 	}
 

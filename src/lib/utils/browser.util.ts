@@ -1,4 +1,4 @@
-import {BrowserEnum} from '../models/screen.enums';
+import { BrowserEnum } from '../models/screen.enums';
 
 export function detectBrowser(userAgent: string = navigator.userAgent): BrowserEnum {
 	const ua = userAgent.toLowerCase();
