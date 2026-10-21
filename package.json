@@ -1,6 +1,6 @@
 {
   "name": "tool-screen-ang15",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Библиотека экрана",
   "peerDependencies": {
     "@angular/common": "^15.2.0",
