@@ -1,8 +1,12 @@
-import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { ElementRef, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+
 import { auditTime, BehaviorSubject, fromEvent, merge, Observable, Subject, takeUntil, } from 'rxjs';
 
+import { green } from 'tool-log';
+
 import { IDevices } from '../models/devices';
+import { ScreenEnums } from "../models/screen.enums";
 import { IScreenInfo } from '../models/screen.interfaces';
 import { IToolScreenConfig, TOOL_SCREEN_CONFIG } from '../tokens/tool-screen.config';
 import { ScreenDetectorService } from './screen-detector.service';
@@ -38,6 +42,8 @@ export class ToolScreenService {
 
 	/** Текущие границы устройств (можно менять через `setDevices`). */
 	private _devices: IDevices = { ...this._config.devices };
+
+	private _wrapperRef: ElementRef<HTMLElement> | null = null;
 
 	/** Публичный поток состояния экрана (read-only). */
 	public readonly state$: Observable<IScreenInfo>;
@@ -76,7 +82,60 @@ export class ToolScreenService {
 	 */
 	public refresh(): void {
 		if (!this._isBrowser || this._destroy$.isStopped) return;
+
 		this._state$$.next(this._detector.getScreen(this._devices));
+
+		this.applyWidth();
+	}
+
+	/**
+	 * Устанавливает корневой элемент инструмента.
+	 * Если передать `null`/`undefined` — сбрасывает ссылку.
+	 */
+	public setWrapperRef(ref: ElementRef<HTMLElement> | null | undefined): void {
+		this._wrapperRef = ref ?? null;
+
+		this.applyWidth();
+	}
+
+	/** Ссылка на корневой элемент (read-only снимок). */
+	public get wrapperRef(): ElementRef<HTMLElement> | null {
+		return this._wrapperRef;
+	}
+
+	/**
+	 * Применяет ширину к корневому элементу инструмента через CSS-переменную `--tool-page-width`.
+	 *
+	 * Логика:
+	 * - если тип экрана — Desktop и заданы `pageWidth` и `maxSize`:
+	 *     - `pageWidth <= maxSize` → `${pageWidth}px`
+	 *     - иначе → `100%`
+	 * - во всех остальных случаях (мобильные, планшеты, нет данных) → `100%`
+	 *
+	 * Метод безопасен: если `_wrapperRef` не задан (например, вне браузера
+	 * или до появления DOM-элемента) — тихо выходит.
+	 */
+
+	private applyWidth(): void {
+		const ref = this._wrapperRef;
+
+		if (!ref?.nativeElement) return;
+
+		const screenType = this.state.screen.type;
+		const maxSize = this.state.screen.options.maxSize;
+		const pageWidth = this.state.devices.desktopMaxSize;
+
+		let widthWrapper: string;
+
+		if (screenType === ScreenEnums.Desktop && pageWidth != null && maxSize != null) {
+			widthWrapper = pageWidth <= maxSize ? `${pageWidth}px` : '100%';
+		} else {
+			widthWrapper = '100%';
+		}
+
+		ref.nativeElement.style.setProperty('--tool-page-width', widthWrapper);
+
+		green({ screen: this._state$$.getValue() });
 	}
 
 	/**
@@ -86,7 +145,10 @@ export class ToolScreenService {
 	public destroy(): void {
 		this._destroy$.next();
 		this._destroy$.complete();
+
 		this._state$$.complete();
+
+		this._wrapperRef = null;
 	}
 
 	/**
@@ -114,6 +176,6 @@ export class ToolScreenService {
 				auditTime(this._config.resizeDebounceMs),
 				takeUntil(this._destroy$),
 			)
-			.subscribe(() => this.refresh());
+			.subscribe(() => { this.refresh(); });
 	}
 }
