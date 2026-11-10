@@ -58,6 +58,8 @@ export class ToolScreenService {
 		this.state$ = this._state$$.asObservable();
 
 		if (this._isBrowser) {
+			// переменная --tool-page-width для ширины страницы
+			document.documentElement.style.setProperty('--tool-page-width', '100%');
 			this.listenToResize();
 		}
 	}
