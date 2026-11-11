@@ -2,6 +2,9 @@
  * Public API Surface of tool-screen-ang15
  */
 
+export * from './lib/theme/theme.lighthouse';
+export * from './lib/theme/theme-class.directive';
+export * from './lib/theme/theme.module';
 export * from './lib/models/devices';
 export * from './lib/models/screen.enums';
 export * from './lib/models/screen.interfaces';
