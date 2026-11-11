@@ -35,9 +35,7 @@ export class ThemeLighthouse {
 	public readonly lighthouse$ = new BehaviorSubject<TNullable<ITheme>>(null);
 
 	public send$(value: ITheme, from: string = 'Не указано'): void {
-		if (!value) {
-			return;
-		}
+		if (!value) { return; }
 
 		green(`ThemeLighthouse send$ from ${from}`, { value })
 
