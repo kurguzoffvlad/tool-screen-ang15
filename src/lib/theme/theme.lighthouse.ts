@@ -8,24 +8,19 @@ import { green } from "tool-log";
 
 export interface ITheme {
 	name: string;
-	options?: {
-		callback?: (bg: string) => void;
-		bg: string;
-	};
 }
 
 /**
  * Отправка информации о теме приложения.
  *
  * @example
- * const themeLighthouse = inject(ThemeLighthouse);
+ * 	public constructor(
+ * 		private readonly themeLighthouse: ThemeLighthouse
+ * 	){}
  *
- * themeLighthouse.send$({
+ * this.themeLighthouse.send$(
+ * {
  *     name: 'dark',
- *     options: {
- *         bg: '#1e1e1e',
- *         callback: (bg) => console.log('Фон:', bg),
- *     },
  * }, 'AppComponent');
  */
 @Injectable({

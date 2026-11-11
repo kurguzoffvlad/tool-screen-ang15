@@ -71,6 +71,7 @@ export class ThemeClassDirective implements OnInit, OnDestroy {
 				filter((theme): theme is ITheme => theme != null),
 			)
 			.subscribe((theme: ITheme) => {
+				console.log('theme', theme);
 				this.currentTheme = theme.name;
 				this._reapply();
 			});
