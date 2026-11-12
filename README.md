@@ -2,16 +2,14 @@
 
 ***
 
-```markdown
 # ToolScreen (`tool-screen-ang15`)
 
 Библиотека для Angular 15, которая определяет тип устройства (смартфон, планшет, десктоп), ориентацию экрана, операционную систему, браузер и плотность пикселей. Предоставляет реактивный поток состояния экрана через RxJS и поддерживает SSR.
 
-- **`ScreenDetectorService`** — сбор информации об экране и устройстве;
-- **`ToolScreenService`** — реактивное состояние, автоматическое обновление, конфигурация;
-- **`detectBrowser` / `detectOperatingSystem`** — утилиты определения браузера и ОС по User-Agent.
+- ScreenDetectorService — сбор информации об экране и устройстве;
+- ToolScreenService — реактивное состояние, автоматическое обновление, конфигурация;
+- detectBrowser / detectOperatingSystem — утилиты определения браузера и ОС по User-Agent.
 
----
 
 ## Содержание
 
@@ -21,6 +19,8 @@
 - [Сервисы](#сервисы)
 	- [ScreenDetectorService](#screendetectorservice)
 	- [ToolScreenService](#toolscreenservice)
+- [Ширина страницы (`--tool-page-width`)](#ширина-страницы---tool-page-width)
+- [Темы (`ThemeModule`)](#темы-thememodule)
 - [Интерфейсы и типы](#интерфейсы-и-типы)
 - [Перечисления](#перечисления)
 - [Утилиты](#утилиты)
@@ -149,6 +149,65 @@ Root-scoped сервис (`providedIn: 'root'`). Один экземпляр н�
 События «схлопываются» через `auditTime(resizeDebounceMs)`.
 
 ---
+
+## Ширина страницы (`--tool-page-width`)
+
+`ToolScreenService` управляет CSS-переменной `--tool-page-width`:
+
+- при инициализации в браузере ставит `100%` на `document.documentElement`;
+- `setWrapperRef(ref)` — задаёт корневой элемент инструмента, на который применяется ширина;
+- `applyWidth()` (приватный, вызывается из `refresh()` и `setWrapperRef()`):
+	- **Desktop** и задан `desktopMaxSize` → `${desktopMaxSize}px`, если он `<= maxSize`, иначе `100%`;
+	- иначе (phone/tablet/нет данных) → `100%`.
+
+```ts
+@Component({...})
+export class ToolComponent implements AfterViewInit {
+	private readonly screen = inject(ToolScreenService);
+	private readonly host = inject(ElementRef<HTMLElement>);
+
+	public ngAfterViewInit(): void {
+		this.screen.setWrapperRef(this.host);
+	}
+}
+
+.tool-wrapper {
+	width: var(--tool-page-width, 100%);
+}
+```
+
+
+**Раздел про темы** (после «Примеры использования»):
+
+
+## Темы (`ThemeModule`)
+
+`ThemeModule` экспортирует `ThemeClassDirective` и `ThemeLighthouse` — механизм темизации через суффикс `_{theme}` к CSS-классам.
+
+**`ThemeLighthouse`** (root-scoped) — маяк текущей темы:
+
+| Член | Описание |
+|------|----------|
+| `lighthouse$` | `BehaviorSubject<TNullable<ITheme>>` (стартует с `null`) |
+| `send$(value, from?)` | Публикует тему; `from` — для логов |
+| `getValue()` | Синхронный снимок темы |
+
+**`ThemeClassDirective`** (`[themeClass]`) — добавляет к каждому базовому классу суффикс текущей темы (`['button']` + `dark` → `button_dark`), корректно удаляя предыдущие при смене темы или списка классов.
+
+```
+<!-- применение -->
+@NgModule({ imports: [ThemeModule] })
+export class AppModule {}
+
+this.themeLighthouse.send$({name: 'dark'}, 'AppComponent');
+
+.license-widget_dark { /* ... */ }
+.license-widget_white { /* ... */ }
+
+<div [themeClass]="['license-widget', 'card']"></div>
+<!-- при теме dark → классы license-widget_dark, card_dark -->
+```
+
 
 ## Интерфейсы и типы
 
